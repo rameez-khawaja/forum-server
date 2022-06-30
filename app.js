@@ -101,7 +101,7 @@ app.post("/newcomment", async (req, res) => {
 
 app.post("/newemoji", async (req, res) => {
     const data = await req.body;
-    const id = data.id
+    const id = ('000' + data.id).substr(-3)
     delete data.id
     const jsonString = JSON.stringify(data)
     fs.writeFile(`./json files/${id}.json`, jsonString, err => {
