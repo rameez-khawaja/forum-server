@@ -21,7 +21,7 @@ app.get("/data", (req, res) => {
 })
 
 app.get("/data/:id", (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = ('000' + parseInt(req.params.id)).substr(-3)
     let jsonArray = []
     const jsonsInDir = fs.readdirSync(`./json files/comments/${id}`).filter(file => path.extname(file) === '.json');
     jsonsInDir.forEach(file => {
@@ -66,8 +66,8 @@ app.get("/data/:id", (req, res) => {
 app.post("/newpost", async (req, res) => {
     const data = await req.body;
     const jsonString = JSON.stringify(data)
-    const fileName = fs.readdirSync("./json files").length
-
+    const fileNumber = fs.readdirSync("./json files").length
+    fileName = ('000' + fileNumber).substr(-3)
     fs.writeFile(`./json files/${fileName}.json`, jsonString, err => {
         if (err) {
             res.status(404).send()
@@ -82,11 +82,12 @@ app.post("/newpost", async (req, res) => {
 
 app.post("/newcomment", async (req, res) => {
     const data = await req.body;
-    const id = data.id
+    const id = ('000' + data.id).substr(-3)
     delete data.id
     const checkEmpty = data.comment
     const jsonString = JSON.stringify(data)
-    const fileName = fs.readdirSync(`./json files/comments/${id}`).length + 1
+    let fileNumber = fs.readdirSync(`./json files/comments/${id}`).length + 1
+    fileName = ('000' + fileNumber).substr(-3)
     if (/^\s*$/.test(checkEmpty) != true){
     fs.writeFile(`./json files/comments/${id}/${fileName}.json`, jsonString, err => {
         if (err) {
